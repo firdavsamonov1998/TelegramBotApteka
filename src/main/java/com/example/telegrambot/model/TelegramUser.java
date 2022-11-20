@@ -1,12 +1,12 @@
 package com.example.telegrambot.model;
 
 import lombok.*;
-import org.glassfish.grizzly.http.util.TimeStamp;
 import org.telegram.telegrambots.meta.api.objects.Contact;
 
-import javax.persistence.*;
-import java.time.*;
-import java.util.List;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 
 @Getter
 @Setter

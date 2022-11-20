@@ -25,14 +25,14 @@ public class Worker {
 
     private String department;
 
+    @Column(unique = true)
     private String phone;
 
     private String position;
 
     private String area;
 
+    @Column(unique = true)
     private String password;
 
-    @OneToMany(mappedBy = "worker",cascade = CascadeType.ALL, orphanRemoval = true )
-    private  Set<Doctor> doctor;
 }

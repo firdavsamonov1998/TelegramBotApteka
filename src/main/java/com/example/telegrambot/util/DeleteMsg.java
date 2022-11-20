@@ -8,8 +8,6 @@ public class DeleteMsg {
         DeleteMessage deleteMessage = new DeleteMessage();
         deleteMessage.setChatId(chatId);
         deleteMessage.setMessageId(messageID);
-        System.out.println(deleteMessage.getMessageId());
-
         return deleteMessage;
     }
 }

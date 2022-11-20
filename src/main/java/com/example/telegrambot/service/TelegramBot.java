@@ -32,6 +32,7 @@ import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScope
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Component
@@ -41,7 +42,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     public final BotConfig botConfig;
     public final DoctorRepository doctorRepository;
     public final Locationrepository locationrepository;
-
 
     public final UserController userController;
 
@@ -55,8 +55,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     public final EmployeeDataController dataController;
     public final AdminController adminController;
     public final CallbackqueryMessage callbackqueryMessage;
-
-
     TelegramUser telegramUser = new TelegramUser();
     TelegramUser order = new TelegramUser();
 
@@ -96,8 +94,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage()) {
             Users users = saveUser(update.getMessage());
             Message message = update.getMessage();
-
-            if (message.getChatId() == 1030035146 || message.getChatId() == 1024661500) {
+            if (message.getChatId() == 1030035146) {
                 adminController.handle(update);
                 return;
             }
@@ -107,7 +104,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                     case "/start" -> {
                         start(message);
                         users.setStep(Step.checkPassword);
-
                         return;
                     }
                     case "/about" -> {
@@ -199,11 +195,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                         users.setStep(Step.getLocation);
                     }
                     case Step.getLocation -> pharmacyController.getPharmacyLocation(message);
-                    case Step.checkPassword -> {
-                        if (userController.checkPassword(message)!=null){
-                            doctorController.scan(userController.checkPassword(message));
-                        };
-                    }
+                    case Step.checkPassword -> userController.checkPassword(message);
+
                 }
             } else if (update.getMessage().hasLocation()) {
 
@@ -231,18 +224,14 @@ public class TelegramBot extends TelegramLongPollingBot {
         } else if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             Message message = callbackQuery.getMessage();
-            if (message.getChatId() == 1030035146 || message.getChatId() == 1024661500) {
-                adminController.handle(update);
-                return;
-            }
+             if (message.getChatId() == 1030035146) {
+                  adminController.handle(update);
+                  return;
+              }
             callbackqueryMessage.handle(callbackQuery);
 
         } else {
-
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setText("Unknown");
-            sendMessage.setChatId(update.getMessage().getChatId());
-            send(sendMessage);
+            send(SendMsg.sendMsg(update.getMessage().getChatId(),"Unknown"));
         }
 
     }
@@ -265,15 +254,10 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     public void sendDataOfUserToAdmin(Message message) {
 
-
         if (telegramUser.getContact() != null) {
 
             if (message.getFrom().getUserName() != null) {
-                send(SendMsg.sendMsgParse(message.getChatId(), "*Ismi va Familiyasi : *" + telegramUser.getFullName()
-                        + "\n*Borgan korxona nomi : * " + telegramUser.getCompanyName() + "\n*Telefon nomeri : *" +
-                        telegramUser.getContact().getPhoneNumber() + "" + "\n*Telegram manzil :* @" +
-                        message.getFrom().getUserName() + "\n*Sana : *" + telegramUser.getLocalDate() + "\n*Vaqt : *"
-                        + telegramUser.getLocalTime()));
+                send(SendMsg.sendMsgParse(message.getChatId(), "*Ismi va Familiyasi : *%s\n*Borgan korxona nomi : * %s\n*Telefon nomeri : *%s\n*Telegram manzil :* @%s\n*Sana : *%s\n*Vaqt : *%s".formatted(telegramUser.getFullName(), telegramUser.getCompanyName(), telegramUser.getContact().getPhoneNumber(), message.getFrom().getUserName(), telegramUser.getLocalDate(), telegramUser.getLocalTime())));
             } else {
                 send(SendMsg.sendMsgParse(message.getChatId(), "*Ismi va Familiyasi : *" + telegramUser.getFullName()
                         + "\n*Borgan korxona nomi : * " + telegramUser.getCompanyName() + "\n*Telefon nomeri : *"
@@ -282,7 +266,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
         } else {
-
             if (message.getFrom().getUserName() != null) {
                 send(SendMsg.sendMsgParse(message.getChatId(), "*Ismi va Familiyasi : *"
                         + telegramUser.getFullName() + "\n*Borgan korxona nomi : * " + telegramUser.getCompanyName() +
@@ -296,38 +279,25 @@ public class TelegramBot extends TelegramLongPollingBot {
                         telegramUser.getLocalTime()));
             }
 
-
         }
-
 
         send(SendMsg.sendLC(message.getChatId(), message.getLocation().getLatitude(),
                 message.getLocation().getLatitude()));
-
 
     }
 
 
     public void start(Message message) {
-
-        DeleteMessage deleteMessage = new DeleteMessage();
-        deleteMessage.setChatId(message.getChatId());
-        deleteMessage.setMessageId(message.getMessageId());
-        send(deleteMessage);
-        send(SendMsg.sendMsgParse(message.getChatId(), "*Iltimos bot dan foydalanishingiz uchun siz ga berilga parol ni kiriting*"));
-
-
+        send(SendMsg.sendMsgParse(message.getChatId(),
+                "*Iltimos bot dan foydalanishingiz uchun siz ga berilga parol ni kiriting*"));
     }
 
 
     public void about(Message message) {
-
-        DeleteMessage deleteMessage = new DeleteMessage();
-        deleteMessage.setChatId(message.getChatId());
-        deleteMessage.setMessageId(message.getMessageId());
-        send(deleteMessage);
-
-
-        send(SendMsg.sendMsgParse(message.getChatId(), "*Ushbu bot  OOO DR BLESS TRADE kompniyasi uchun Hozirgi kunda Java Backend developer sifatida " + "ECMA companiyasida ishlab kelayotgan " + "Amonov Firdavs Rustamjon o'g'li tomonidan yaratildi ! Murojat uchun  telegram manzil : @Java_Backend_Dr* , " + "*Tel nomer :* +99893-223-54-32 "));
+        send(SendMsg.sendMsgParse(message.getChatId(),
+                "*Ushbu bot  OOO DR BLESS TRADE kompniyasi uchun Hozirgi kunda Java Backend developer sifatida "
+                        + "ECMA companiyasida ishlab kelayotgan " + "Amonov Firdavs Rustamjon o'g'li tomonidan yaratildi !" +
+                        " Murojat uchun  telegram manzil : @Java_Backend_Dr* , " + "*Tel nomer :* +99893-223-54-32 "));
 
 
     }
@@ -340,7 +310,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             throw new RuntimeException(e);
         }
     }
-
     public void send(SendLocation sendLocation) {
         try {
             execute(sendLocation);

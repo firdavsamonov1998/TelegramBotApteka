@@ -9,13 +9,11 @@ import com.example.telegrambot.button.Keyboard;
 import com.example.telegrambot.contstant.Constant;
 import com.example.telegrambot.contstant.Step;
 import com.example.telegrambot.entity.Users;
-import com.example.telegrambot.entity.Worker;
 import com.example.telegrambot.service.CallbackqueryMessage;
 import com.example.telegrambot.service.TelegramBot;
 import com.example.telegrambot.util.SendMsg;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -96,7 +94,6 @@ public class AdminController {
                 }
                 case Constant.pharmacyList -> {
                     listData.pharmacyList(message);
-
                     return;
                 }
 
@@ -107,9 +104,7 @@ public class AdminController {
                 }
             }
 
-
             switch (users.getStep()) {
-
                 case Step.department -> {
                     addEmployeeService.getDepartment(message);
                     users.setStep(Step.workerFullName);
@@ -162,12 +157,6 @@ public class AdminController {
 
 
     private void menu(Message message) {
-//        DeleteMessage deleteMessage = new DeleteMessage();
-//        deleteMessage.setChatId(message.getChatId());
-//        deleteMessage.setMessageId(message.getMessageId());
-//        telegramBot.send(deleteMessage);
-
-
         telegramBot.send(SendMsg.sendMsgParse(message.getChatId(),
                 "*Siz asosiy sahifadasiz " +
                         "\nO'zingizga kerakli menu ni tanlang*",
@@ -177,13 +166,6 @@ public class AdminController {
     }
 
     private void start(Message message) {
-
-//        DeleteMessage deleteMessage = new DeleteMessage();
-//        deleteMessage.setChatId(message.getChatId());
-//        deleteMessage.setMessageId(message.getMessageId());
-//        telegramBot.send(deleteMessage);
-
-
         telegramBot.send(SendMsg.sendMsgParse(message.getChatId(),
                 "*Assalomu alekum umumiy bosharuv paneliga xush kelibsiz*",
                 InlineKeyboard.goToMenu("Asosiy sahifaga o'tish")));
@@ -198,9 +180,7 @@ public class AdminController {
             }
         }
         Users user = new Users();
-
         user.setChatId(message.getChatId());
-
         users.add(user);
         return user;
     }

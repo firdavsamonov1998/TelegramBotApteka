@@ -32,7 +32,6 @@ public class SendMsg {
         sendMessage.setText(text);
         sendMessage.setReplyMarkup(markup);
 
-
         return sendMessage;
     }
 

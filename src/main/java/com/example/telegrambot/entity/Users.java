@@ -3,9 +3,8 @@ package com.example.telegrambot.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +14,6 @@ import javax.persistence.*;
 public class Users {
 
     private Long chatId;
-
     @Column
     private String username;
 

@@ -18,8 +18,8 @@ import java.util.List;
 public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
     private Long id;
+
     private String fullName;
 
     private String area;
@@ -30,12 +30,11 @@ public class Doctor {
 
     private String status;
 
+    @Column(unique = true)
     private String phone;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    @JoinColumn(name = "worker_id")
+ /*   @ManyToOne(optional = false)
     private Worker worker;
-
+*/
 
 }

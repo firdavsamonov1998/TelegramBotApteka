@@ -25,35 +25,19 @@ public class DeleteWorker {
 
     public void deleteWorkerById(Message message) {
         String text = message.getText();
-
-//        DeleteMessage deleteMessage = new DeleteMessage();
-//        deleteMessage.setMessageId(message.getMessageId() - 1);
-//        deleteMessage.setChatId(message.getChatId());
-//        telegramBot.send(deleteMessage);
-//
-//        DeleteMessage deleteMessage1 = new DeleteMessage();
-//        deleteMessage1.setChatId(message.getChatId());
-//        deleteMessage1.setMessageId(message.getMessageId());
-//        telegramBot.send(deleteMessage1);
-
-
         int count = 0;
         for (int i = 0; i < text.length(); i++) {
             if (!Character.isDigit(text.charAt(i))) {
                 count++;
             }
         }
-
         if (count > 0) {
 
             telegramBot.send(SendMsg.sendMsgParse(message.getChatId(),
                     "*ID raqam da harf yoki belgi bo'lmasligi kerak*",
                     Keyboard.backMenu()));
-
-
             return;
         }
-
         Long id = Long.valueOf(message.getText());
         Optional<Worker> optional = telegramBot.workerRepository.findById(id);
         if (optional.isEmpty()) {
@@ -68,24 +52,11 @@ public class DeleteWorker {
             telegramBot.send(SendMsg.sendMsgParse(message.getChatId(),
                     "*Muvaffaqqiyatli o'chirildi \uD83D\uDDD1\uD83D\uDDD1\uD83D\uDDD1*",
                     Keyboard.backMenu()));
-
         }
-
 
     }
 
     public void deleteWorker(Message message) {
-
-//        DeleteMessage deleteMessage = new DeleteMessage();
-//        deleteMessage.setMessageId(message.getMessageId() - 1);
-//        deleteMessage.setChatId(message.getChatId());
-//        telegramBot.send(deleteMessage);
-//
-//        DeleteMessage deleteMessage1 = new DeleteMessage();
-//        deleteMessage1.setMessageId(message.getMessageId());
-//        deleteMessage1.setChatId(message.getChatId());
-//        telegramBot.send(deleteMessage1);
-
         telegramBot.send(SendMsg.sendMsgParse(message.getChatId(),
                 "*Iltimos xodim ni o'chirish uchun xodimning Id raqamini kiriting*"));
 

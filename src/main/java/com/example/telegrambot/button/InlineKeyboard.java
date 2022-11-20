@@ -4,17 +4,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class InlineKeyboard {
 
-    /**
-     * This method is used for button
-     *
-     * @param text String
-     * @return InlineKeyboard
-     */
     public static InlineKeyboardMarkup goToMenu(String text) {
 
         InlineKeyboardButton button = new InlineKeyboardButton();
